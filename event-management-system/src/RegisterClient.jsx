@@ -1,17 +1,32 @@
 import { useState } from "react";
 import "./Register.css";
+import axios from "axios";
 
 export default function RegisterClient() 
 {
   const [fullname, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
-  const [password, setPassword] = useState("");
+  const [clientEmail, setEmail] = useState("");
+  const [clientContact, setContact] = useState("");
+  const [clientPassword, setPassword] = useState("");
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    // You can send the data to your backend here
-    console.log({ fullname, email, contact, password });
+    
+    const allInfo = {
+      name: fullname,
+      email: clientEmail,
+      contact: clientContact,
+      password: clientPassword,
+    };
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/register/client",
+        allInfo
+      );
+      console.log("Successfully registered:", response.data);
+    } catch (error) {
+      console.error("Registration failed:", error.response?.data || error.message);
+    }
   }
 
   return (
@@ -33,7 +48,7 @@ export default function RegisterClient()
             name="email"
             id="email"
             placeholder="Email Address"
-            value={email}
+            value={clientEmail}
             onChange={(e) => setEmail(e.target.value)}
           />
 
@@ -42,7 +57,7 @@ export default function RegisterClient()
             name="contact"
             id="contact"
             placeholder="Contact Number"
-            value={contact}
+            value={clientContact}
             onChange={(e) => setContact(e.target.value)}
           />
 
@@ -51,7 +66,7 @@ export default function RegisterClient()
             name="password"
             id="password"
             placeholder="Password"
-            value={password}
+            value={clientPassword}
             onChange={(e) => setPassword(e.target.value)}
           />
 
